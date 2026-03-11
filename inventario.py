@@ -6,7 +6,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.clock import Clock
 from kivy.lang import Builder
-from kivy.properties import ObjectProperty, StringProperty, BooleanProperty, ListProperty
+from kivy.properties import ObjectProperty, StringProperty, BooleanProperty, ListProperty, NumericProperty
 from kivy.uix.behaviors import ButtonBehavior
 
 Window.clearcolor = (0.96, 0.97, 0.98, 1) # #F5F7FA
@@ -309,8 +309,18 @@ KV = '''
                     points: [self.x, self.y, self.right, self.y]
                     width: 1
 
+            RoundedButton:
+                text: '☰'
+                bg_color: 0.31, 0.27, 0.9, 1
+                size_hint_x: None
+                width: 50
+                size_hint_y: None
+                height: 40
+                pos_hint: {'center_y': 0.5}
+                on_release: root.toggle_sidebar()
+
             Label:
-                text: '📦 InventarioApp'
+                text: 'InventarioApp'
                 color: 0.31, 0.27, 0.9, 1
                 font_size: '22sp'
                 bold: True
@@ -318,6 +328,7 @@ KV = '''
                 valign: 'center'
                 text_size: self.size
                 size_hint_x: 0.4
+                padding: [15, 0]
                 
             Label:
                 id: bienvenida_label
@@ -328,16 +339,6 @@ KV = '''
                 text_size: self.size
                 size_hint_x: 0.4
                 padding: [20, 0]
-                
-            RoundedButton:
-                text: '☰'
-                bg_color: 0.31, 0.27, 0.9, 1
-                size_hint_x: None
-                width: 50
-                size_hint_y: None
-                height: 40
-                pos_hint: {'center_y': 0.5}
-                on_release: root.toggle_sidebar()
                 
             RoundedButton:
                 text: 'SALIR'
@@ -379,7 +380,7 @@ KV = '''
                     bold: True
                     
                 SidebarButton:
-                    text: '📊 Dashboard'
+                    text: 'Dashboard'
                     size_hint_y: None
                     height: 45
                     id: btn_dash
@@ -387,31 +388,15 @@ KV = '''
                     on_release: root.switch_tab('dash')
 
                 SidebarButton:
-                    text: '➕ Nuevo Producto'
-                    size_hint_y: None
-                    height: 45
-                    id: btn_nuevo
-                    active: root.current_tab == 'nuevo'
-                    on_release: root.switch_tab('nuevo')
-                    
-                SidebarButton:
-                    text: '📋 Inventario'
+                    text: 'Inventario'
                     size_hint_y: None
                     height: 45
                     id: btn_inv
                     active: root.current_tab == 'inv'
                     on_release: root.switch_tab('inv')
-
-                SidebarButton:
-                    text: '🔍 Buscar'
-                    size_hint_y: None
-                    height: 45
-                    id: btn_busc
-                    active: root.current_tab == 'busc'
-                    on_release: root.switch_tab('busc')
                     
                 SidebarButton:
-                    text: '👥 Usuarios'
+                    text: 'Usuarios'
                     size_hint_y: None
                     height: 45
                     id: btn_usr
@@ -419,7 +404,7 @@ KV = '''
                     on_release: root.switch_tab('usr')
                     
                 SidebarButton:
-                    text: '📈 Reportes'
+                    text: 'Reportes'
                     size_hint_y: None
                     height: 45
                     id: btn_rep
@@ -490,17 +475,9 @@ KV = '''
                             Widget:
                                 # Spacer
                     Screen:
-                        name: 'nuevo'
-                        PantallaNuevoInterna:
-                            id: pantalla_nuevo_interna
-                    Screen:
                         name: 'inv'
                         PantallaListarInterna:
                             id: pantalla_listar_interna
-                    Screen:
-                        name: 'busc'
-                        PantallaBuscarInterna:
-                            id: pantalla_buscar_interna
                     Screen:
                         name: 'usr'
                         PantallaUsuariosInterna:
@@ -510,173 +487,121 @@ KV = '''
                         PantallaReporteInterna:
                             id: pantalla_reporte_interna
 
-<PantallaNuevoInterna@BoxLayout>:
-    orientation: 'vertical'
-    spacing: 15
-    ModernHeader:
-        text: 'Añadir Nuevo Producto'
-        size_hint_y: None
-        height: 50
-    CardLayout:
-        padding: 30
-        ScrollView:
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint_y: None
-                height: self.minimum_height
-                spacing: 15
-                padding: [5, 5, 5, 5]
-
-                GridLayout:
-                    cols: 2
-                    spacing: 20
-                    size_hint_y: None
-                    height: 80
-                    BoxLayout:
-                        orientation: 'vertical'
-                        spacing: 5
-                        ModernSubtext:
-                            text: 'Código'
-                        ModernTextInput:
-                            id: p_codigo
-                            multiline: False
-                    BoxLayout:
-                        orientation: 'vertical'
-                        spacing: 5
-                        ModernSubtext:
-                            text: 'Nombre de Producto'
-                        ModernTextInput:
-                            id: p_nombre
-                            multiline: False
-                
-                BoxLayout:
-                    orientation: 'vertical'
-                    spacing: 5
-                    size_hint_y: None
-                    height: 100
-                    ModernSubtext:
-                        text: 'Descripción'
-                    ModernTextInput:
-                        id: p_desc
-                        multiline: True
-                
-                GridLayout:
-                    cols: 3
-                    spacing: 20
-                    size_hint_y: None
-                    height: 80
-                    BoxLayout:
-                        orientation: 'vertical'
-                        spacing: 5
-                        ModernSubtext:
-                            text: 'Cantidad'
-                        ModernTextInput:
-                            id: p_cantidad
-                            multiline: False
-                    BoxLayout:
-                        orientation: 'vertical'
-                        spacing: 5
-                        ModernSubtext:
-                            text: 'Precio Unitario'
-                        ModernTextInput:
-                            id: p_precio
-                            multiline: False
-                    BoxLayout:
-                        orientation: 'vertical'
-                        spacing: 5
-                        ModernSubtext:
-                            text: 'Categoría'
-                        ModernTextInput:
-                            id: p_categoria
-                            multiline: False
-                            
-                Label:
-                    id: p_mensaje
-                    text: ''
-                    color: 1, 0.3, 0.3, 1
-                    size_hint_y: None
-                    height: 20
-                    font_size: '13sp'
-                            
-                BoxLayout:
-                    size_hint_y: None
-                    height: 45
-                    Widget:
-                    RoundedButton:
-                        text: 'GUARDAR PRODUCTO'
-                        size_hint_x: None
-                        width: 200
-                        on_release: app.guardar_producto_handler()
-
-<ProductCard@CardLayout>:
-    orientation: 'horizontal'
+<ProductTableRow@BoxLayout>:
     size_hint_y: None
-    height: 90
-    padding: 15
-    spacing: 15
+    height: 40
+    padding: [15, 0, 15, 0]
+    spacing: 5
     codigo: ''
     nombre: ''
+    categoria: ''
     cantidad: 0
     precio: 0.0
-    categoria: ''
-    BoxLayout:
-        orientation: 'vertical'
-        size_hint_x: 0.7
-        Label:
-            text: root.nombre
-            color: 0.1, 0.1, 0.1, 1
-            font_size: '16sp'
-            bold: True
-            halign: 'left'
-            valign: 'bottom'
-            text_size: self.size
-        ModernSubtext:
-            text: f"Cód: [b]{root.codigo}[/b] | Cat: {root.categoria}"
-            markup: True
-            valign: 'top'
-    BoxLayout:
-        orientation: 'vertical'
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: 0.9, 0.9, 0.9, 1
+        Line:
+            points: [self.x, self.y, self.right, self.y]
+            width: 1
+    Label:
+        text: root.codigo
+        color: 0.1, 0.1, 0.1, 1
+        size_hint_x: 0.15
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    Label:
+        text: root.nombre
+        color: 0.1, 0.1, 0.1, 1
         size_hint_x: 0.3
-        Label:
-            text: f"${root.precio:.2f}"
-            color: 0.31, 0.27, 0.9, 1
-            font_size: '16sp'
-            bold: True
-            halign: 'right'
-            valign: 'bottom'
-            text_size: self.size
-        ModernSubtext:
-            text: f"Stock: {root.cantidad} u."
-            halign: 'right'
-            valign: 'top'
-            color: (0.8, 0.2, 0.2, 1) if root.cantidad < 5 else (0.1, 0.6, 0.1, 1)
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    Label:
+        text: root.categoria
+        color: 0.1, 0.1, 0.1, 1
+        size_hint_x: 0.2
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    Label:
+        text: str(root.cantidad)
+        color: (0.8, 0.2, 0.2, 1) if root.cantidad < 5 else (0.1, 0.1, 0.1, 1)
+        bold: root.cantidad < 5
+        size_hint_x: 0.15
+        text_size: self.size
+        halign: 'center'
+        valign: 'center'
+    Label:
+        text: f"${root.precio:.2f}"
+        color: 0.1, 0.1, 0.1, 1
+        size_hint_x: 0.15
+        text_size: self.size
+        halign: 'right'
+        valign: 'center'
+    Label:
+        text: f"${(root.cantidad * root.precio):.2f}"
+        color: 0.31, 0.27, 0.9, 1
+        bold: True
+        size_hint_x: 0.15
+        text_size: self.size
+        halign: 'right'
+        valign: 'center'
 
 <PantallaListarInterna@BoxLayout>:
     orientation: 'vertical'
     spacing: 15
     ModernHeader:
-        text: 'Inventario de Productos'
+        text: 'Gestión de Inventario'
         size_hint_y: None
-        height: 50
-    ScrollView:
-        BoxLayout:
-            id: p_lista
-            orientation: 'vertical'
-            size_hint_y: None
-            height: self.minimum_height
-            spacing: 10
-            padding: [5, 5, 5, 5]
-
-<PantallaBuscarInterna@BoxLayout>:
-    orientation: 'vertical'
-    spacing: 15
-    ModernHeader:
-        text: 'Búsqueda Rápida'
+        height: 40
+        
+    # Form to add product
+    CardLayout:
         size_hint_y: None
-        height: 50
+        height: 60
+        padding: 10
+        spacing: 10
+        ModernTextInput:
+            id: p_codigo
+            hint_text: 'Código'
+            multiline: False
+            size_hint_x: 0.15
+        ModernTextInput:
+            id: p_nombre
+            hint_text: 'Nombre'
+            multiline: False
+            size_hint_x: 0.25
+        ModernTextInput:
+            id: p_categoria
+            hint_text: 'Categoría'
+            multiline: False
+            size_hint_x: 0.15
+        ModernTextInput:
+            id: p_cantidad
+            hint_text: 'Cant.'
+            multiline: False
+            size_hint_x: 0.1
+        ModernTextInput:
+            id: p_precio
+            hint_text: 'Precio'
+            multiline: False
+            size_hint_x: 0.1
+        RoundedButton:
+            text: 'AÑADIR'
+            size_hint_x: 0.15
+            height: 40
+            on_release: app.guardar_producto_handler()
+            
+    # Search bar
     BoxLayout:
         size_hint_y: None
-        height: 50
+        height: 40
         spacing: 10
         ModernTextInput:
             id: b_input
@@ -687,45 +612,132 @@ KV = '''
             size_hint_x: None
             width: 120
             on_release: app.buscar_producto_handler()
+        RoundedButton:
+            text: 'MOSTRAR TODOS'
+            size_hint_x: None
+            width: 150
+            bg_color: 0.5, 0.5, 0.5, 1
+            on_release: app.cargar_lista_productos()
+
+    Label:
+        id: p_mensaje
+        text: ''
+        color: 1, 0.3, 0.3, 1
+        size_hint_y: None
+        height: 20
+        font_size: '13sp'
+        
+    # Table Header
+    CardLayout:
+        size_hint_y: None
+        height: 40
+        padding: [15, 0, 15, 0]
+        spacing: 5
+        canvas.before:
+            Color:
+                rgba: 0.9, 0.9, 0.95, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [8,]
+        Label:
+            text: 'CÓDIGO'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.15
+            text_size: self.size
+            halign: 'left'
+            valign: 'center'
+        Label:
+            text: 'NOMBRE'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.3
+            text_size: self.size
+            halign: 'left'
+            valign: 'center'
+        Label:
+            text: 'CATEGORÍA'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.2
+            text_size: self.size
+            halign: 'left'
+            valign: 'center'
+        Label:
+            text: 'CANTIDAD'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.15
+            text_size: self.size
+            halign: 'center'
+            valign: 'center'
+        Label:
+            text: 'PRECIO'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.15
+            text_size: self.size
+            halign: 'right'
+            valign: 'center'
+        Label:
+            text: 'TOTAL'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.15
+            text_size: self.size
+            halign: 'right'
+            valign: 'center'
+
     ScrollView:
         BoxLayout:
-            id: b_resultados
+            id: p_lista
             orientation: 'vertical'
             size_hint_y: None
             height: self.minimum_height
-            spacing: 10
-            padding: [5, 5, 5, 5]
+            spacing: 0
+            padding: [0, 5, 0, 5]
 
-<UserCard@CardLayout>:
-    orientation: 'horizontal'
+<UserTableRow@BoxLayout>:
     size_hint_y: None
-    height: 70
-    padding: 15
-    spacing: 15
-    nombre: ''
+    height: 40
+    padding: [15, 0, 15, 0]
+    spacing: 5
     usuario: ''
+    nombre: ''
     email: ''
-    BoxLayout:
-        orientation: 'vertical'
-        size_hint_x: 0.5
-        Label:
-            text: root.nombre
-            color: 0.1, 0.1, 0.1, 1
-            font_size: '16sp'
-            bold: True
-            halign: 'left'
-            valign: 'bottom'
-            text_size: self.size
-        ModernSubtext:
-            text: f"@{root.usuario}"
-            valign: 'top'
-    BoxLayout:
-        orientation: 'vertical'
-        size_hint_x: 0.5
-        ModernSubtext:
-            text: root.email
-            halign: 'right'
-            valign: 'center'
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: 0.9, 0.9, 0.9, 1
+        Line:
+            points: [self.x, self.y, self.right, self.y]
+            width: 1
+    Label:
+        text: root.usuario
+        color: 0.1, 0.1, 0.1, 1
+        size_hint_x: 0.2
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    Label:
+        text: root.nombre
+        color: 0.1, 0.1, 0.1, 1
+        size_hint_x: 0.4
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    Label:
+        text: root.email
+        color: 0.1, 0.1, 0.1, 1
+        size_hint_x: 0.4
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
 
 <PantallaUsuariosInterna@BoxLayout>:
     orientation: 'vertical'
@@ -734,14 +746,53 @@ KV = '''
         text: 'Directorio de Usuarios'
         size_hint_y: None
         height: 50
+        
+    # Table Header
+    CardLayout:
+        size_hint_y: None
+        height: 40
+        padding: [15, 0, 15, 0]
+        spacing: 5
+        canvas.before:
+            Color:
+                rgba: 0.9, 0.9, 0.95, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [8,]
+        Label:
+            text: 'USUARIO'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.2
+            text_size: self.size
+            halign: 'left'
+            valign: 'center'
+        Label:
+            text: 'NOMBRE'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.4
+            text_size: self.size
+            halign: 'left'
+            valign: 'center'
+        Label:
+            text: 'EMAIL'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.4
+            text_size: self.size
+            halign: 'left'
+            valign: 'center'
+
     ScrollView:
         BoxLayout:
             id: u_lista
             orientation: 'vertical'
             size_hint_y: None
             height: self.minimum_height
-            spacing: 10
-            padding: [5, 5, 5, 5]
+            spacing: 0
+            padding: [0, 5, 0, 5]
 
 <PantallaReporteInterna@BoxLayout>:
     orientation: 'vertical'
@@ -881,7 +932,7 @@ class MainDashboard(Screen):
 
     def actualizar_bienvenida(self):
         if self.usuario_actual:
-            self.ids.bienvenida_label.text = f'👋 Hola, {self.usuario_actual[3]}'
+            self.ids.bienvenida_label.text = f'Hola, {self.usuario_actual[3]}'
             self.switch_tab('dash')
 
     def toggle_sidebar(self):
@@ -889,21 +940,17 @@ class MainDashboard(Screen):
         if self.sidebar_open:
             self.ids.sidebar.width = 250
             self.ids.menu_title.text = 'MENÚ PRINCIPAL'
-            self.ids.btn_dash.text = '📊 Dashboard'
-            self.ids.btn_nuevo.text = '➕ Nuevo Producto'
-            self.ids.btn_inv.text = '📋 Inventario'
-            self.ids.btn_busc.text = '🔍 Buscar'
-            self.ids.btn_usr.text = '👥 Usuarios'
-            self.ids.btn_rep.text = '📈 Reportes'
+            self.ids.btn_dash.text = 'Dashboard'
+            self.ids.btn_inv.text = 'Inventario'
+            self.ids.btn_usr.text = 'Usuarios'
+            self.ids.btn_rep.text = 'Reportes'
         else:
             self.ids.sidebar.width = 80
             self.ids.menu_title.text = ''
-            self.ids.btn_dash.text = '📊'
-            self.ids.btn_nuevo.text = '➕'
-            self.ids.btn_inv.text = '📋'
-            self.ids.btn_busc.text = '🔍'
-            self.ids.btn_usr.text = '👥'
-            self.ids.btn_rep.text = '📈'
+            self.ids.btn_dash.text = ''
+            self.ids.btn_inv.text = ''
+            self.ids.btn_usr.text = ''
+            self.ids.btn_rep.text = ''
 
     def switch_tab(self, tab_name):
         self.current_tab = tab_name
@@ -939,11 +986,17 @@ class MainDashboard(Screen):
         self.usuario_actual = None
         self.manager.current = 'login'
 
-class ProductCard(BoxLayout):
-    pass
+class ProductTableRow(BoxLayout):
+    codigo = StringProperty('')
+    nombre = StringProperty('')
+    categoria = StringProperty('')
+    cantidad = NumericProperty(0)
+    precio = NumericProperty(0.0)
     
-class UserCard(BoxLayout):
-    pass
+class UserTableRow(BoxLayout):
+    usuario = StringProperty('')
+    nombre = StringProperty('')
+    email = StringProperty('')
 
 class InventarioApp(App):
     def build(self):
@@ -975,11 +1028,11 @@ class InventarioApp(App):
 
     def guardar_producto_handler(self):
         dash = self.get_dashboard()
-        p_nuevo = dash.ids.pantalla_nuevo_interna
+        p_nuevo = dash.ids.pantalla_listar_interna
         
         codigo = p_nuevo.ids.p_codigo.text
         nombre = p_nuevo.ids.p_nombre.text
-        desc = p_nuevo.ids.p_desc.text
+        desc = ''
         categoria = p_nuevo.ids.p_categoria.text
         
         if not codigo or not nombre:
@@ -991,25 +1044,28 @@ class InventarioApp(App):
             cant = int(p_nuevo.ids.p_cantidad.text) if p_nuevo.ids.p_cantidad.text else 0
             prec = float(p_nuevo.ids.p_precio.text) if p_nuevo.ids.p_precio.text else 0.0
         except:
-            p_nuevo.ids.p_mensaje.text = "Cantidad y precio deben ser numéricos"
+            p_nuevo.ids.p_mensaje.text = "Cantidad y precio numéricos"
             Clock.schedule_once(lambda dt: setattr(p_nuevo.ids.p_mensaje, 'text', ''), 3)
             return
             
         try:
             self.db.cursor.execute("INSERT INTO productos (codigo, nombre, descripcion, cantidad, precio, categoria) VALUES (?, ?, ?, ?, ?, ?)", (codigo, nombre, desc, cant, prec, categoria))
             self.db.conexion.commit()
-            self.mostrar_popup("Éxito", "Producto guardado correctamente")
             
             p_nuevo.ids.p_codigo.text = ''
             p_nuevo.ids.p_nombre.text = ''
-            p_nuevo.ids.p_desc.text = ''
             p_nuevo.ids.p_categoria.text = ''
             p_nuevo.ids.p_cantidad.text = ''
             p_nuevo.ids.p_precio.text = ''
             
-            dash.switch_tab('inv')
+            p_nuevo.ids.p_mensaje.text = "Producto añadido"
+            p_nuevo.ids.p_mensaje.color = (0.2, 0.8, 0.2, 1) # Green success message
+            Clock.schedule_once(lambda dt: setattr(p_nuevo.ids.p_mensaje, 'text', ''), 3)
+            Clock.schedule_once(lambda dt: setattr(p_nuevo.ids.p_mensaje, 'color', (1, 0.3, 0.3, 1)), 3)
+            
+            self.cargar_lista_productos()
         except sqlite3.IntegrityError:
-            p_nuevo.ids.p_mensaje.text = "Error: El código de producto ya existe"
+            p_nuevo.ids.p_mensaje.text = "Error: El código ya existe"
             Clock.schedule_once(lambda dt: setattr(p_nuevo.ids.p_mensaje, 'text', ''), 3)
         except Exception as e:
             p_nuevo.ids.p_mensaje.text = f"Error: {e}"
@@ -1027,7 +1083,7 @@ class InventarioApp(App):
                 lista_container.add_widget(Label(text="No tienes productos en tu inventario.", color=(0.5,0.5,0.5,1), size_hint_y=None, height=50))
                 return
             for p in prods:
-                card = ProductCard(codigo=p[1], nombre=p[2], cantidad=p[4], precio=p[5], categoria=p[6] or 'Sin categoría')
+                card = ProductTableRow(codigo=p[1], nombre=p[2], cantidad=p[4], precio=p[5], categoria=p[6] or 'N/A')
                 lista_container.add_widget(card)
         except Exception as e:
             lista_container.add_widget(Label(text=f"Error cargando: {e}", color=(1,0,0,1), size_hint_y=None, height=50))
@@ -1044,19 +1100,19 @@ class InventarioApp(App):
                 lista_container.add_widget(Label(text="No hay usuarios.", color=(0.5,0.5,0.5,1), size_hint_y=None, height=50))
                 return
             for u in users:
-                card = UserCard(usuario=u[1], nombre=u[3], email=u[4] or 'Sin email')
+                card = UserTableRow(usuario=u[1], nombre=u[3], email=u[4] or 'Sin email')
                 lista_container.add_widget(card)
         except Exception as e:
             lista_container.add_widget(Label(text=f"Error cargando: {e}", color=(1,0,0,1), size_hint_y=None, height=50))
 
     def buscar_producto_handler(self):
         dash = self.get_dashboard()
-        texto = dash.ids.pantalla_buscar_interna.ids.b_input.text
-        resultados = dash.ids.pantalla_buscar_interna.ids.b_resultados
+        texto = dash.ids.pantalla_listar_interna.ids.b_input.text
+        resultados = dash.ids.pantalla_listar_interna.ids.p_lista
         resultados.clear_widgets()
         
         if not texto:
-            resultados.add_widget(Label(text="Por favor ingresa un término de búsqueda", color=(0.5,0.5,0.5,1), size_hint_y=None, height=50))
+            self.cargar_lista_productos()
             return
             
         try:
@@ -1066,7 +1122,7 @@ class InventarioApp(App):
                 resultados.add_widget(Label(text=("No se encontraron resultados para '%s'" % texto), color=(0.5,0.5,0.5,1), size_hint_y=None, height=50))
                 return
             for p in prods:
-                card = ProductCard(codigo=p[1], nombre=p[2], cantidad=p[4], precio=p[5], categoria=p[6] or 'Sin categoría')
+                card = ProductTableRow(codigo=p[1], nombre=p[2], cantidad=p[4], precio=p[5], categoria=p[6] or 'N/A')
                 resultados.add_widget(card)
         except Exception as e:
             resultados.add_widget(Label(text=f"Error: {e}", color=(1,0,0,1), size_hint_y=None, height=50))
@@ -1099,7 +1155,7 @@ class InventarioApp(App):
             
             box2 = BoxLayout(orientation='vertical', size_hint_y=None, padding=10)
             box2.bind(minimum_height=box2.setter('height'))
-            box2.add_widget(LabelSubTitle("⚠️ Alerta de Bajo Stock", (0.9, 0.3, 0.3, 1)))
+            box2.add_widget(LabelSubTitle("Alerta de Bajo Stock", (0.9, 0.3, 0.3, 1)))
             
             if bajo:
                 for p in bajo:
