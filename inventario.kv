@@ -1,0 +1,866 @@
+<RoundedButton>:
+    background_color: 0, 0, 0, 0
+    canvas.before:
+        Color:
+            rgba: self.bg_color if self.state == 'normal' else (self.bg_color[0]*0.8, self.bg_color[1]*0.8, self.bg_color[2]*0.8, 1)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [8,]
+    color: 1, 1, 1, 1
+    bold: True
+
+<ModernTextInput@TextInput>:
+    background_color: 0, 0, 0, 0
+    cursor_color: 0.31, 0.27, 0.9, 1
+    font_size: '18sp'
+    padding: [15, 10]
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [6,]
+        Color:
+            rgba: (0.31, 0.27, 0.9, 1) if self.focus else (0.8, 0.8, 0.8, 1)
+        Line:
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 6)
+            width: 1.2
+
+<CardLayout@BoxLayout>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [15,]
+        Color:
+            rgba: 0, 0, 0, 0.05
+        BoxShadow:
+            pos: self.pos
+            size: self.size
+            offset: 0, -2
+            spread_radius: -2, -2
+            border_radius: 15, 15, 15, 15
+            blur_radius: 10
+
+<SidebarButton>:
+    canvas.before:
+        Color:
+            rgba: (0.9, 0.9, 0.95, 1) if self.active else ((0.95, 0.95, 0.95, 1) if self.state == 'down' else self.bg_color)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [8,]
+    Label:
+        text: root.text
+        color: (0.31, 0.27, 0.9, 1) if root.active else (0.3, 0.3, 0.3, 1)
+        bold: root.active
+        halign: 'left'
+        valign: 'center'
+        text_size: self.size
+        padding: [20, 0]
+
+<ModernHeader@Label>:
+    color: 0.1, 0.1, 0.1, 1
+    font_size: '24sp'
+    bold: True
+    halign: 'left'
+    valign: 'center'
+    text_size: self.size
+
+<ModernSubtext@Label>:
+    color: 0.4, 0.4, 0.4, 1
+    font_size: '14sp'
+    halign: 'left'
+    valign: 'center'
+    text_size: self.size
+
+<ModernPopup@Popup>:
+    background_color: 0, 0, 0, 0
+    background: ''
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [15,]
+    title_color: 0.1, 0.1, 0.1, 1
+    title_size: '18sp'
+    title_align: 'center'
+    separator_color: 0.31, 0.27, 0.9, 1
+    separator_height: 2
+
+<PantallaLogin>:
+    BoxLayout:
+        padding: [0, 0, 0, 0]
+        canvas.before:
+            Color:
+                rgba: 0.96, 0.97, 0.98, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        AnchorLayout:
+            CardLayout:
+                orientation: 'vertical'
+                size_hint: 0.8, None
+                height: 520
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                padding: 40
+                spacing: 20
+                ModernHeader:
+                    text: 'Bienvenido de nuevo'
+                    halign: 'center'
+                    size_hint_y: None
+                    height: 40
+                ModernSubtext:
+                    text: 'Inicia sesión en tu cuenta de InventarioApp'
+                    halign: 'center'
+                    size_hint_y: None
+                    height: 30
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: 5
+                    size_hint_y: None
+                    height: 80
+                    ModernSubtext:
+                        text: 'Usuario'
+                    ModernTextInput:
+                        id: usuario_input
+                        multiline: False
+                        write_tab: False
+                        size_hint_y: None
+                        height: 50
+                BoxLayout:
+                    orientation: 'vertical'
+                    spacing: 5
+                    size_hint_y: None
+                    height: 80
+                    ModernSubtext:
+                        text: 'Contraseña'
+                    ModernTextInput:
+                        id: password_input
+                        multiline: False
+                        password: True
+                        write_tab: False
+                        size_hint_y: None
+                        height: 50
+                Label:
+                    id: mensaje_label
+                    text: ''
+                    color: 1, 0.3, 0.3, 1
+                    size_hint_y: None
+                    height: 20
+                    font_size: '13sp'
+                RoundedButton:
+                    text: 'INICIAR SESIÓN'
+                    size_hint_y: None
+                    height: 45
+                    on_release: root.iniciar_sesion()
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: 50
+                    spacing: 5
+                    ModernSubtext:
+                        text: '¿No tienes cuenta?'
+                        halign: 'center'
+                    Button:
+                        text: 'Regístrate aquí'
+                        color: 0.31, 0.27, 0.9, 1
+                        bold: True
+                        halign: 'center'
+                        text_size: self.size
+                        background_color: 0, 0, 0, 0
+                        size_hint_y: None
+                        height: 30
+                        on_release: root.ir_registro()
+
+<PantallaRegistro>:
+    BoxLayout:
+        padding: [0, 0, 0, 0]
+        canvas.before:
+            Color:
+                rgba: 0.96, 0.97, 0.98, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        AnchorLayout:
+            CardLayout:
+                orientation: 'vertical'
+                size_hint: 0.85, None
+                height: 600
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                padding: 40
+                spacing: 15
+                ModernHeader:
+                    text: 'Crear Cuenta'
+                    halign: 'center'
+                    size_hint_y: None
+                    height: 40
+                ModernSubtext:
+                    text: 'Regístrate para gestionar tu inventario'
+                    halign: 'center'
+                    size_hint_y: None
+                    height: 30
+                ScrollView:
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: 15
+                        padding: [5, 5, 5, 5]
+                        BoxLayout:
+                            orientation: 'vertical'
+                            spacing: 5
+                            size_hint_y: None
+                            height: 80
+                            ModernSubtext:
+                                text: 'Nombre Completo'
+                            ModernTextInput:
+                                id: nombre_input
+                                multiline: False
+                                write_tab: False
+                                size_hint_y: None
+                                height: 50
+                        BoxLayout:
+                            orientation: 'vertical'
+                            spacing: 5
+                            size_hint_y: None
+                            height: 80
+                            ModernSubtext:
+                                text: 'Usuario'
+                            ModernTextInput:
+                                id: usuario_input
+                                multiline: False
+                                write_tab: False
+                                size_hint_y: None
+                                height: 50
+                        BoxLayout:
+                            orientation: 'vertical'
+                            spacing: 5
+                            size_hint_y: None
+                            height: 80
+                            ModernSubtext:
+                                text: 'Email'
+                            ModernTextInput:
+                                id: email_input
+                                multiline: False
+                                write_tab: False
+                                size_hint_y: None
+                                height: 50
+                        BoxLayout:
+                            orientation: 'vertical'
+                            spacing: 5
+                            size_hint_y: None
+                            height: 80
+                            ModernSubtext:
+                                text: 'Contraseña'
+                            ModernTextInput:
+                                id: password_input
+                                multiline: False
+                                password: True
+                                write_tab: False
+                                size_hint_y: None
+                                height: 50
+                Label:
+                    id: mensaje_label
+                    text: ''
+                    color: 1, 0.3, 0.3, 1
+                    size_hint_y: None
+                    height: 20
+                    font_size: '13sp'
+                BoxLayout:
+                    spacing: 10
+                    size_hint_y: None
+                    height: 45
+                    RoundedButton:
+                        text: 'VOLVER'
+                        bg_color: 0.6, 0.6, 0.6, 1
+                        on_release: root.volver()
+                    RoundedButton:
+                        text: 'REGISTRARSE'
+                        on_release: root.registrar_usuario()
+
+<MainDashboard>:
+    BoxLayout:
+        orientation: 'vertical'
+        CardLayout:
+            size_hint_y: None
+            height: 70
+            padding: [20, 10, 20, 10]
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                Color:
+                    rgba: 0.9, 0.9, 0.9, 1
+                Line:
+                    points: [self.x, self.y, self.right, self.y]
+                    width: 1
+            RoundedButton:
+                text: '☰'
+                bg_color: 0.31, 0.27, 0.9, 1
+                size_hint_x: None
+                width: 50
+                size_hint_y: None
+                height: 40
+                pos_hint: {'center_y': 0.5}
+                on_release: root.toggle_sidebar()
+            Label:
+                text: 'InventarioApp'
+                color: 0.31, 0.27, 0.9, 1
+                font_size: '22sp'
+                bold: True
+                halign: 'left'
+                valign: 'center'
+                text_size: self.size
+                size_hint_x: 0.4
+                padding: [15, 0]
+            Label:
+                id: bienvenida_label
+                text: 'Bienvenido, Usuario'
+                color: 0.3, 0.3, 0.3, 1
+                halign: 'right'
+                valign: 'center'
+                text_size: self.size
+                size_hint_x: 0.4
+                padding: [20, 0]
+            RoundedButton:
+                text: 'SALIR'
+                bg_color: 0.9, 0.3, 0.3, 1
+                size_hint_x: None
+                width: 100
+                size_hint_y: None
+                height: 40
+                pos_hint: {'center_y': 0.5}
+                on_release: root.cerrar_sesion()
+        BoxLayout:
+            BoxLayout:
+                id: sidebar
+                orientation: 'vertical'
+                size_hint_x: None
+                width: 250
+                padding: [15, 20, 15, 20]
+                spacing: 10
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                    Color:
+                        rgba: 0.9, 0.9, 0.9, 1
+                    Line:
+                        points: [self.right, self.y, self.right, self.top]
+                        width: 1
+                ModernSubtext:
+                    id: menu_title
+                    text: 'MENÚ PRINCIPAL'
+                    size_hint_y: None
+                    height: 30
+                    font_size: '12sp'
+                    bold: True
+                SidebarButton:
+                    text: 'Dashboard'
+                    size_hint_y: None
+                    height: 45
+                    id: btn_dash
+                    active: root.current_tab == 'dash'
+                    on_release: root.switch_tab('dash')
+                SidebarButton:
+                    text: 'Inventario'
+                    size_hint_y: None
+                    height: 45
+                    id: btn_inv
+                    active: root.current_tab == 'inv'
+                    on_release: root.switch_tab('inv')
+                SidebarButton:
+                    text: 'Usuarios'
+                    size_hint_y: None
+                    height: 45
+                    id: btn_usr
+                    active: root.current_tab == 'usr'
+                    on_release: root.switch_tab('usr')
+                SidebarButton:
+                    text: 'Reportes'
+                    size_hint_y: None
+                    height: 45
+                    id: btn_rep
+                    active: root.current_tab == 'rep'
+                    on_release: root.switch_tab('rep')
+                Widget:
+                    size_hint_y: 1
+            BoxLayout:
+                padding: 20
+                ScreenManager:
+                    id: sm_interna
+                    Screen:
+                        name: 'dash'
+                        BoxLayout:
+                            orientation: 'vertical'
+                            spacing: 20
+                            ModernHeader:
+                                text: 'Dashboard General'
+                                size_hint_y: None
+                                height: 50
+                            GridLayout:
+                                cols: 3
+                                spacing: 20
+                                size_hint_y: None
+                                height: 150
+                                CardLayout:
+                                    orientation: 'vertical'
+                                    padding: 20
+                                    ModernSubtext:
+                                        text: 'Total Productos'
+                                    Label:
+                                        id: stat_total
+                                        text: '0'
+                                        color: 0.31, 0.27, 0.9, 1
+                                        font_size: '35sp'
+                                        bold: True
+                                        halign: 'left'
+                                        text_size: self.size
+                                CardLayout:
+                                    orientation: 'vertical'
+                                    padding: 20
+                                    ModernSubtext:
+                                        text: 'Unidades en Stock'
+                                    Label:
+                                        id: stat_unidades
+                                        text: '0'
+                                        color: 0.1, 0.7, 0.4, 1
+                                        font_size: '35sp'
+                                        bold: True
+                                        halign: 'left'
+                                        text_size: self.size
+                                CardLayout:
+                                    orientation: 'vertical'
+                                    padding: 20
+                                    ModernSubtext:
+                                        text: 'Valor de Inventario'
+                                    Label:
+                                        id: stat_valor
+                                        text: '$0.00'
+                                        color: 0.9, 0.6, 0.1, 1
+                                        font_size: '35sp'
+                                        bold: True
+                                        halign: 'left'
+                                        text_size: self.size
+                            Widget:
+                                size_hint_y: 1
+                    Screen:
+                        name: 'inv'
+                        PantallaListarInterna:
+                            id: pantalla_listar_interna
+                    Screen:
+                        name: 'usr'
+                        PantallaUsuariosInterna:
+                            id: pantalla_usuarios_interna
+                    Screen:
+                        name: 'rep'
+                        PantallaReporteInterna:
+                            id: pantalla_reporte_interna
+
+<ProductTableRow@BoxLayout>:
+    size_hint_y: None
+    height: 40
+    padding: [10, 0, 10, 0]
+    spacing: 5
+    codigo: ''
+    nombre: ''
+    categoria: ''
+    cantidad: 0
+    precio: 0.0
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: 0.9, 0.9, 0.9, 1
+        Line:
+            points: [self.x, self.y, self.right, self.y]
+            width: 1
+    Label:
+        text: root.codigo
+        color: 0.1, 0.1, 0.1, 1
+        size_hint_x: 0.15
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    Label:
+        text: root.nombre
+        color: 0.1, 0.1, 0.1, 1
+        size_hint_x: 0.25
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    Label:
+        text: root.categoria
+        color: 0.1, 0.1, 0.1, 1
+        size_hint_x: 0.15
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    Label:
+        text: str(root.cantidad)
+        color: (0.8, 0.2, 0.2, 1) if root.cantidad < 5 else (0.1, 0.1, 0.1, 1)
+        bold: root.cantidad < 5
+        size_hint_x: 0.1
+        text_size: self.size
+        halign: 'center'
+        valign: 'center'
+    Label:
+        text: f"${root.precio:.2f}"
+        color: 0.1, 0.1, 0.1, 1
+        size_hint_x: 0.1
+        text_size: self.size
+        halign: 'right'
+        valign: 'center'
+    Label:
+        text: f"${(root.cantidad * root.precio):.2f}"
+        color: 0.31, 0.27, 0.9, 1
+        bold: True
+        size_hint_x: 0.1
+        text_size: self.size
+        halign: 'right'
+        valign: 'center'
+    # BOTONES DE ACCIÓN PARA PRODUCTOS
+    BoxLayout:
+        id: botones_accion_producto
+        size_hint_x: 0.15
+        spacing: 5
+        padding: [5, 5, 5, 5]
+        opacity: 1 if root.mostrar_botones else 0
+        disabled: not root.mostrar_botones
+        RoundedButton:
+            text: 'E'
+            bg_color: 0.2, 0.6, 0.8, 1
+            on_release: app.abrir_editar_producto(root.codigo)
+        RoundedButton:
+            text: 'X'
+            bg_color: 0.8, 0.2, 0.2, 1
+            on_release: app.eliminar_producto(root.codigo)
+
+<PantallaListarInterna@BoxLayout>:
+    orientation: 'vertical'
+    spacing: 15
+    ModernHeader:
+        text: 'Gestión de Inventario'
+        size_hint_y: None
+        height: 40
+    CardLayout:
+        id: formulario_agregar_producto
+        size_hint_y: None
+        height: 70
+        padding: 10
+        spacing: 10
+        ModernTextInput:
+            id: p_codigo
+            hint_text: 'Código'
+            multiline: False
+            size_hint_x: 0.15
+            size_hint_y: None
+            height: 50
+        ModernTextInput:
+            id: p_nombre
+            hint_text: 'Nombre'
+            multiline: False
+            size_hint_x: 0.25
+            size_hint_y: None
+            height: 50
+        ModernTextInput:
+            id: p_categoria
+            hint_text: 'Categoría'
+            multiline: False
+            size_hint_x: 0.15
+            size_hint_y: None
+            height: 50
+        ModernTextInput:
+            id: p_cantidad
+            hint_text: 'Cant.'
+            multiline: False
+            size_hint_x: 0.1
+            size_hint_y: None
+            height: 50
+        ModernTextInput:
+            id: p_precio
+            hint_text: 'Precio'
+            multiline: False
+            size_hint_x: 0.1
+            size_hint_y: None
+            height: 50
+        RoundedButton:
+            text: 'AÑADIR'
+            size_hint_x: 0.15
+            size_hint_y: None
+            height: 50
+            on_release: app.guardar_producto_handler()
+    BoxLayout:
+        size_hint_y: None
+        height: 40
+        spacing: 10
+        ModernTextInput:
+            id: b_input
+            hint_text: 'Buscar por código o nombre...'
+            multiline: False
+            size_hint_y: None
+            height: 50
+        RoundedButton:
+            text: 'BUSCAR'
+            size_hint_x: None
+            width: 100
+            on_release: app.buscar_producto_handler()
+        RoundedButton:
+            text: 'TODOS'
+            size_hint_x: None
+            width: 100
+            bg_color: 0.5, 0.5, 0.5, 1
+            on_release: app.cargar_lista_productos()
+        # BOTÓN GENERAR PDF
+        RoundedButton:
+            id: btn_pdf
+            text: 'PDF'
+            size_hint_x: None
+            width: 60
+            bg_color: 0.8, 0.2, 0.2, 1
+            on_release: app.generar_pdf()
+            
+    Label:
+        id: p_mensaje
+        text: ''
+        color: 1, 0.3, 0.3, 1
+        size_hint_y: None
+        height: 20
+        font_size: '13sp'
+    CardLayout:
+        size_hint_y: None
+        height: 40
+        padding: [10, 0, 10, 0]
+        spacing: 5
+        canvas.before:
+            Color:
+                rgba: 0.9, 0.9, 0.95, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [8,]
+        Label:
+            text: 'CÓDIGO'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.15
+            text_size: self.size
+            halign: 'left'
+            valign: 'center'
+        Label:
+            text: 'NOMBRE'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.25
+            text_size: self.size
+            halign: 'left'
+            valign: 'center'
+        Label:
+            text: 'CATEGORÍA'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.15
+            text_size: self.size
+            halign: 'left'
+            valign: 'center'
+        Label:
+            text: 'CANT.'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.1
+            text_size: self.size
+            halign: 'center'
+            valign: 'center'
+        Label:
+            text: 'PRECIO'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.1
+            text_size: self.size
+            halign: 'right'
+            valign: 'center'
+        Label:
+            text: 'TOTAL'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.1
+            text_size: self.size
+            halign: 'right'
+            valign: 'center'
+        Label:
+            text: 'ACCIONES'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.15
+            text_size: self.size
+            halign: 'center'
+            valign: 'center'
+    ScrollView:
+        BoxLayout:
+            id: p_lista
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: 0
+            padding: [0, 5, 0, 5]
+
+<UserTableRow@BoxLayout>:
+    size_hint_y: None
+    height: 40
+    padding: [15, 0, 15, 0]
+    spacing: 5
+    usuario: ''
+    nombre: ''
+    email: ''
+    rol: ''
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: 0.9, 0.9, 0.9, 1
+        Line:
+            points: [self.x, self.y, self.right, self.y]
+            width: 1
+    Label:
+        text: root.usuario
+        color: 0.1, 0.1, 0.1, 1
+        size_hint_x: 0.2
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    Label:
+        text: root.nombre
+        color: 0.1, 0.1, 0.1, 1
+        size_hint_x: 0.3
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    Label:
+        text: root.email
+        color: 0.1, 0.1, 0.1, 1
+        size_hint_x: 0.25
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    Label:
+        text: root.rol
+        color: 0.31, 0.27, 0.9, 1
+        bold: True
+        size_hint_x: 0.1
+        text_size: self.size
+        halign: 'left'
+        valign: 'center'
+    # BOTONES DE ACCIÓN PARA USUARIOS
+    BoxLayout:
+        size_hint_x: 0.15
+        spacing: 5
+        padding: [5, 5, 5, 5]
+        RoundedButton:
+            text: 'E'
+            bg_color: 0.2, 0.6, 0.8, 1
+            on_release: app.abrir_editar_usuario(root.usuario)
+        RoundedButton:
+            text: 'X'
+            bg_color: 0.8, 0.2, 0.2, 1
+            on_release: app.eliminar_usuario(root.usuario)
+
+<PantallaUsuariosInterna@BoxLayout>:
+    orientation: 'vertical'
+    spacing: 15
+    ModernHeader:
+        text: 'Directorio de Usuarios'
+        size_hint_y: None
+        height: 50
+    CardLayout:
+        size_hint_y: None
+        height: 40
+        padding: [15, 0, 15, 0]
+        spacing: 5
+        canvas.before:
+            Color:
+                rgba: 0.9, 0.9, 0.95, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [8,]
+        Label:
+            text: 'USUARIO'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.2
+            text_size: self.size
+            halign: 'left'
+            valign: 'center'
+        Label:
+            text: 'NOMBRE'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.3
+            text_size: self.size
+            halign: 'left'
+            valign: 'center'
+        Label:
+            text: 'EMAIL'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.25
+            text_size: self.size
+            halign: 'left'
+            valign: 'center'
+        Label:
+            text: 'ROL'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.1
+            text_size: self.size
+            halign: 'left'
+            valign: 'center'
+        Label:
+            text: 'ACCIONES'
+            color: 0.3, 0.3, 0.3, 1
+            bold: True
+            size_hint_x: 0.15
+            text_size: self.size
+            halign: 'center'
+            valign: 'center'
+    ScrollView:
+        BoxLayout:
+            id: u_lista
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: 0
+            padding: [0, 5, 0, 5]
+
+<PantallaReporteInterna@BoxLayout>:
+    orientation: 'vertical'
+    spacing: 15
+    ModernHeader:
+        text: 'Reportes de Sistema'
+        size_hint_y: None
+        height: 50
+    ScrollView:
+        BoxLayout:
+            id: r_lista
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: 10
+            padding: [5, 5, 5, 5]
