@@ -10,6 +10,12 @@ from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.uix.popup import Popup
 from kivy.clock import Clock
+try:
+    from tkinter import filedialog
+    import tkinter as tk
+    TKINTER_AVAILABLE = True
+except ImportError:
+    TKINTER_AVAILABLE = False
 
 # Importamos desde nuestros otros archivos
 from base_datos import BaseDatos
@@ -151,7 +157,7 @@ class InventarioApp(App):
                 rol = dash.usuario_actual[5] if len(dash.usuario_actual) > 5 else 'empleado'
                 es_admin = (rol == 'admin')
             
-            self.db.cursor.execute("SELECT * FROM productos ORDER BY nombre")
+            self.db.cursor.execute("SELECT * FROM productos ORDER BY codigo")
             prods = self.db.cursor.fetchall()
             if not prods: return
             for p in prods:
@@ -189,18 +195,49 @@ class InventarioApp(App):
             from reportlab.lib.units import inch
             from datetime import datetime
             
+            # Abrir diálogo para guardar el archivo
+            if TKINTER_AVAILABLE:
+                root = tk.Tk()
+                root.withdraw()  # Ocultar la ventana principal de tkinter
+                root.attributes('-topmost', True)  # Traer al frente
+                
+                # Abrir diálogo de guardar archivo
+                pdf_path = filedialog.asksaveasfilename(
+                    defaultextension=".pdf",
+                    filetypes=[("PDF files", "*.pdf"), ("All files", "*.*")],
+                    title="Guardar Reporte de Inventario",
+                    initialfile="Reporte_Inventario.pdf"
+                )
+                root.destroy()
+                
+                # Si el usuario canceló el diálogo
+                if not pdf_path:
+                    return
+            else:
+                # Si tkinter no está disponible, usar la ruta por defecto
+                pdf_path = os.path.join(os.getcwd(), "Reporte_Inventario.pdf")
+            
             self.db.cursor.execute("SELECT codigo, nombre, categoria, cantidad, precio FROM productos ORDER BY nombre")
             prods = self.db.cursor.fetchall()
             
-            pdf_path = os.path.join(os.getcwd(), "Reporte_Inventario.pdf")
             c = canvas.Canvas(pdf_path, pagesize=letter)
             width, height = letter
             
             # ========== MEMBRETE DE LA EMPRESA ==========
-            # Espacio para logo (puedes agregar una imagen aquí más adelante)
-            # c.drawImage("logo.png", 50, height - 100, width=80, height=80)
+            # Logo en el lado derecho, por encima de la línea azul
+            logo_path = os.path.join(os.getcwd(), "logo.png")
+            if os.path.exists(logo_path):
+                try:
+                    # Logo en el lado derecho, por encima de la línea azul
+                    logo_width = 100
+                    logo_height = 100
+                    logo_x = width - 50 - logo_width  # 50px del margen derecho
+                    logo_y = height - 20 - logo_height  # Más arriba, por encima de la línea azul
+                    c.drawImage(logo_path, logo_x, logo_y, width=logo_width, height=logo_height, preserveAspectRatio=True)
+                except Exception as e:
+                    print(f"Error al cargar el logo: {e}")
             
-            # Datos de la empresa
+            # Datos de la empresa (lado izquierdo)
             c.setFont("Helvetica-Bold", 20)
             c.setFillColor(colors.HexColor('#4F45E6'))  # Color morado similar al tema
             c.drawString(50, height - 50, "Emperadora Internet y Mas")
@@ -435,7 +472,7 @@ class InventarioApp(App):
             self.db.cursor.execute("SELECT SUM(cantidad * precio) FROM productos")
             valor = self.db.cursor.fetchone()[0] or 0
             
-            box1.add_widget(LabelSubTitle("📊 Resumen Financiero", (0.31, 0.27, 0.9, 1)))
+            box1.add_widget(LabelSubTitle("Resumen Financiero", (0.31, 0.27, 0.9, 1)))
             box1.add_widget(LabelBody(f"Total de referencias únicas: {total}"))
             box1.add_widget(LabelBody(f"Total de unidades almacenadas: {items}"))
             box1.add_widget(LabelBody(f"Valorización total: ${valor:,.2f}"))
